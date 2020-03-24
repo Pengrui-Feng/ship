@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Wed Mar 10 10:26:31 2020
+'original_ship_data.csv' is so large,from 1960s. so filter and select duration we want 
 @author: pengrui
 """
 
@@ -16,19 +17,29 @@ def numSplit(num):
     time = '{0}:{1}:00'.format(str(hour).zfill(2),str(mins).zfill(2))
     return time
 
-### set the data range of date
+### set the range of date
 start_time = datetime(2017,1,1).strftime('%m-%d-%Y') 
-end_time = datetime(2019,8,14).strftime('%m-%d-%Y')   # create a forder named by 'IOError'
-
-### filter the data
+end_time = datetime(2019,8,14).strftime('%m-%d-%Y')
 '''
-ship= pd.read_csv('original_ship_data.csv',skiprows= 4370000)#,nrows=200,usecols=[0,2,3,4,5,6,7,8],header=None)#totally 4710692 rows
+### filter the data
+path1= '/content/drive/My Drive/'#/content/drive/My Drive/original_ship_data.csv
+ship= pd.read_csv(path1+'original_ship_data.csv',skiprows= 4370000)#,nrows=200,usecols=[0,2,3,4,5,6,7,8],header=None)#totally 4710692 rows
 ship.to_csv('ship_data.csv')
 '''
-ship= pd.read_csv('ship_data.csv',usecols=[2,3,4,5,6,7,8,9],header=None)
-
+path2='/content/ship_data.csv'
+#ship= pd.read_csv(path2,usecols=[1,2,3,4,5,6,7,8],header=None)
+ship= pd.read_csv(path2,usecols=[2,3,4,5,6,7,8,9],header=None)
 ship.columns=['vessel_num','dive_num','date','time','lat','lon','depth','temp']
-
+# put 'depth' and 'demp' in one line with 'str'
+ship['depth'] = ship['depth'].astype('str')
+ship['temp']= ship['temp'].astype('str')
+ship=ship.groupby(['vessel_num','date','time','dive_num','lat','lon'])['depth','temp'].agg(lambda x:x.str.cat(sep=',')
+'''#list
+Data['depth'] = Data.groupby(['vessel_num','datetime'])['depth'].apply(lambda x:x.tolist())
+Data['temp'] = Data.groupby(['vessel_num','datetime'])['temp'].apply(lambda x:x.tolist())
+'''
+ship.to_csv('ship1.csv')
+ship=pd.read_csv('ship1.csv')
 for i in range(len(ship)):
     ship['time'][i] = numSplit(ship['time'][i])
 
@@ -38,7 +49,7 @@ ship['lon']=-ship['lon']
 ship=ship[['vessel_num','dive_num','datetime','lat','lon','depth','temp']]
 indx=np.where((Time>=start_time) & (Time<=end_time))[0]
 time=Time[indx]
-#time.sort()
-Data = ship.ix[time.index]
-Data.sort_values(by=["vessel_num","dive_num",'depth'])
+Data = ship.loc[time.index]
+Data=Data.sort_values(by=["vessel_num","datetime",'depth'])
+
 Data.to_csv('filtered_ship_data.csv')
