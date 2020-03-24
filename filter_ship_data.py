@@ -18,23 +18,25 @@ def numSplit(num):
     return time
 
 ### set the range of date
-start_time = datetime(2017,1,1).strftime('%m-%d-%Y') 
+start_time = datetime(2014,1,1).strftime('%m-%d-%Y') 
 end_time = datetime(2019,8,14).strftime('%m-%d-%Y')
-'''
+
 ### filter the data
 path1= '/content/drive/My Drive/'#/content/drive/My Drive/original_ship_data.csv
-ship= pd.read_csv(path1+'original_ship_data.csv',skiprows= 4370000)#,nrows=200,usecols=[0,2,3,4,5,6,7,8],header=None)#totally 4710692 rows
-ship.to_csv('ship_data.csv')
+ship= pd.read_csv(path1+'original_ship_data.csv',skiprows= 4100000,usecols=[1,2,3,4,5,6,7,8],header=None)#totally 4710692 rows
 '''
+ship.to_csv('ship_data.csv')
 path2='/content/ship_data.csv'
 #ship= pd.read_csv(path2,usecols=[1,2,3,4,5,6,7,8],header=None)
 ship= pd.read_csv(path2,usecols=[2,3,4,5,6,7,8,9],header=None)
+'''
 ship.columns=['vessel_num','dive_num','date','time','lat','lon','depth','temp']
 # put 'depth' and 'demp' in one line with 'str'
 ship['depth'] = ship['depth'].astype('str')
 ship['temp']= ship['temp'].astype('str')
-ship=ship.groupby(['vessel_num','date','time','dive_num','lat','lon'])['depth','temp'].agg(lambda x:x.str.cat(sep=',')
-'''#list
+ship=ship.groupby(['vessel_num','date','time','dive_num','lat','lon'])['depth','temp'].agg(lambda x:x.str.cat(sep=','))
+'''
+#list
 Data['depth'] = Data.groupby(['vessel_num','datetime'])['depth'].apply(lambda x:x.tolist())
 Data['temp'] = Data.groupby(['vessel_num','datetime'])['temp'].apply(lambda x:x.tolist())
 '''
