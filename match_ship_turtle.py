@@ -13,26 +13,6 @@ import zlconversions as zl
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 
-def nearlonlat(lon,lat,lonp,latp): # needed for the next function get_FVCOM_bottom_temp
-    """
-    i=nearlonlat(lon,lat,lonp,latp) change
-    find the closest node in the array (lon,lat) to a point (lonp,latp)
-    input:
-        lon,lat - np.arrays of the grid nodes, spherical coordinates, degrees
-        lonp,latp - point on a sphere
-        output:
-            i - index of the closest node
-            For coordinates on a plane use function nearxy           
-            Vitalii Sheremet, FATE Project  
-    """
-    cp=np.cos(latp*np.pi/180.)
-    # approximation for small distance
-    dx=(lon-lonp)*cp
-    dy=lat-latp
-    dist2=dx*dx+dy*dy
-    i=np.argmin(dist2)
-    return i
-    
 r1,r2 = 0,3                # the obs position that has shipboard position within (r) kilometers might be considered as good data.
 day = 3                # the obs time that has shipboard time within (3 days) days might be considered as good data.
 s = pd.read_csv('/content/drive/My Drive/filtered_ship_data.csv')
