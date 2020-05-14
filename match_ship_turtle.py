@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Wed Mar 11 10:26:31 2020
-
+match ship and turtle data
 @author: pengrui
 """
 
@@ -12,10 +12,12 @@ from datetime import datetime,timedelta
 import zlconversions as zl
 import matplotlib.pyplot as plt
 from tqdm import tqdm
-
+########hard code #############
 r1,r2 = 0,3                # the obs position that has shipboard position within (r) kilometers might be considered as good data.
 day = 3                # the obs time that has shipboard time within (3 days) days might be considered as good data.
-s = pd.read_csv('/content/drive/My Drive/filtered_ship_data.csv')
+path1='/content/drive/My Drive/filtered_ship_data.csv'# original ship data from 2009
+path2='/content/drive/My Drive/PENGRUI/merge_nosplit/all_merge_td_gps.csv'
+s = pd.read_csv(path1)
 s_id = s['vessel_num']
 slat = s['lat']
 slon = s['lon']
@@ -23,7 +25,7 @@ stime = pd.Series(datetime.strptime(x, "%Y-%m-%d %H:%M:%S") for x in s['datetime
 sdepth = s['depth']
 stemp= s['temp']
 
-t = pd.read_csv('/content/drive/My Drive/PENGRUI/merge_nosplit/tu74_merge_td_gps.csv') # orginal data file
+t = pd.read_csv() # orginal data file
 t_id= t['PTT']
 tlat = t['lat_gps']
 tlon = t['lon_gps']
@@ -83,4 +85,4 @@ data['turtle_lon']=pd.Series(t_lon)
 data['turtle_depth']=pd.Series(t_depth)
 data['turtle_temp']=pd.Series(t_temp)
 
-data.to_csv('/content/drive/My Drive/matched_turtleVSship1.csv')
+data.to_csv('matched_turtleVSship.csv')
